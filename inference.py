@@ -104,7 +104,7 @@ def main(args):
         save_to_mp4(
             _video_frames, 
             f"{args.output_dir}/{os.path.basename(task.ref_video_path).split('.')[0]}" \
-            f"_{datetime.now().strftime('%Y%m%d%H%M%S')}.mp4",
+            f"video.mp4",
             fps=task.fps,
         )
 
