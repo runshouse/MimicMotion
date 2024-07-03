@@ -2,6 +2,8 @@ import os
 import argparse
 import logging
 import math
+import gc
+import torch
 from omegaconf import OmegaConf
 from datetime import datetime
 from pathlib import Path
@@ -82,12 +84,15 @@ def run_pipeline(pipeline: MimicMotionPipeline, image_pixels, pose_pixels, devic
 
 @torch.no_grad()
 def main(args):
+    gc.collect()
+    torch.cuda.empty_cache()
     if not args.no_use_float16 :
         torch.set_default_dtype(torch.float16)
 
     infer_config = OmegaConf.load(args.inference_config)
     pipeline = create_pipeline(infer_config, device)
-
+    gc.collect()
+    torch.cuda.empty_cache()
     for task in infer_config.test_case:
         ############################################## Pre-process data ##############################################
         pose_pixels, image_pixels = preprocess(
